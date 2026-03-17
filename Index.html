@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Acode OS</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#0f172a;
+color:white;
+height:100vh;
+overflow:hidden;
+}
+
+/* LOGIN */
+
+#login{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+gap:10px;
+background:#020617;
+}
+
+/* DESKTOP */
+
+#desktop{
+display:none;
+padding:10px;
+}
+
+/* ICONES */
+
+.icon{
+width:90px;
+text-align:center;
+cursor:pointer;
+margin-bottom:12px;
+}
+
+/* JANELAS */
+
+.window{
+position:absolute;
+width:600px;
+height:420px;
+display:none;
+flex-direction:column;
+background:rgba(255,255,255,0.1);
+border-radius:10px;
+}
+
+.header{
+background:#020617;
+padding:6px;
+display:flex;
+justify-content:space-between;
+}
+
+.content{
+flex:1;
+padding:10px;
+overflow:auto;
+}
+
+/* TASKBAR */
+
+#taskbar{
+position:absolute;
+bottom:0;
+width:100%;
+height:40px;
+background:#020617;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 10px;
+}
+
+/* TERMINAL */
+
+#terminalOutput{
+background:black;
+color:lime;
+height:200px;
+overflow:auto;
+font-family:monospace;
+padding:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div>este é um mini protótipo que vai ser aprimorado no futuro</div>
+
+<div>senha de inicio: 1234</div>
+
+
+<!-- LOGIN -->
+
+<div id="login">
+
+<h2>Acode OS</h2>
+
+<input id="user" placeholder="Usuário">
+
+<input id="pass" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
+
+</div>
+
+<!-- DESKTOP -->
+
+<div id="desktop">
+
+<div class="icon" onclick="toggleApp('files')">📂<br>Arquivos</div>
+
+<div class="icon" onclick="toggleApp('browser')">🌐<br>Navegador</div>
+
+<div class="icon" onclick="toggleApp('ai')">🧠<br>IA</div>
+
+<div class="icon" onclick="toggleApp('terminal')">💻<br>Terminal</div>
+
+<div class="icon" onclick="toggleApp('tasks')">📊<br>Tarefas</div>
+
+<div class="icon" onclick="toggleApp('games')">🎮<br>Jogos</div>
+
+<div class="icon" onclick="toggleApp('notes')">📝<br>Notas</div>
+
+</div>
+
+<!-- EXPLORADOR -->
+
+<div id="files" class="window">
+
+<div class="header">
+
+Explorador
+
+<button onclick="toggleApp('files')">X</button>
+
+</div>
+
+<div class="content">
+
+<input id="filename">
+
+<button onclick="createFile()">Criar</button>
+
+<div id="fileList"></div>
+
+</div>
+
+</div>
+
+<!-- NAVEGADOR -->
+
+<div id="browser" class="window">
+
+<div class="header">
+
+Navegador
+
+<button onclick="toggleApp('browser')">X</button>
+
+</div>
+
+<div class="content">
+
+<input id="url">
+
+<button onclick="openSite()">Abrir</button>
+
+<iframe id="frame" style="width:100%;height:250px"></iframe>
+
+</div>
+
+</div>
+
+<!-- IA -->
+
+<div id="ai" class="window">
+
+<div class="header">
+
+IA
+
+<button onclick="toggleApp('ai')">X</button>
+
+</div>
+
+<div class="content">
+
+<input id="aiInput">
+
+<button onclick="askAI()">Perguntar</button>
+
+<div id="aiOutput"></div>
+
+</div>
+
+</div>
+
+<!-- TERMINAL -->
+
+<div id="terminal" class="window">
+
+<div class="header">
+
+Terminal
+
+<button onclick="toggleApp('terminal')">X</button>
+
+</div>
+
+<div class="content">
+
+<div id="terminalOutput"></div>
+
+<input id="cmd">
+
+<button onclick="runCmd()">Executar</button>
+
+</div>
+
+</div>
+
+<!-- TAREFAS -->
+
+<div id="tasks" class="window">
+
+<div class="header">
+
+Gerenciador
+
+<button onclick="toggleApp('tasks')">X</button>
+
+</div>
+
+<div class="content">
+
+<div id="taskList"></div>
+
+</div>
+
+</div>
+
+<!-- NOTAS -->
+
+<div id="notes" class="window">
+
+<div class="header">
+
+Notas
+
+<button onclick="toggleApp('notes')">X</button>
+
+</div>
+
+<div class="content">
+
+<textarea style="width:100%;height:100%"></textarea>
+
+</div>
+
+</div>
+
+<!-- JOGO -->
+
+<div id="games" class="window">
+
+<div class="header">
+
+Jogo
+
+<button onclick="toggleApp('games')">X</button>
+
+</div>
+
+<div class="content">
+
+<button onclick="startGame()">Iniciar</button>
+
+<canvas id="game"></canvas>
+
+</div>
+
+</div>
+
+<!-- CALCULADORA -->
+
+<div id="calcApp" class="window">
+
+<div class="header">
+
+Calculadora
+
+<button onclick="toggleApp('calcApp')">X</button>
+
+</div>
+
+<div class="content">
+
+<input id="calcInput" placeholder="Ex: 5+5">
+
+<button onclick="calcNow()">Calcular</button>
+
+<div id="calcResult"></div>
+
+</div>
+
+</div>
+
+<!-- TASKBAR -->
+
+<div id="taskbar">
+
+<span id="clock"></span>
+
+
+
+</div>
+
+<script>
+
+/* LOGIN */
+
+function login(){
+
+let senha=document.getElementById("pass").value
+
+if(senha==="1234"){
+
+document.getElementById("login").style.display="none"
+
+document.getElementById("desktop").style.display="block"
+
+}else{
+
+alert("Senha incorreta")
+
+}
+
+}
+
+/* INTERRUPTOR DE APPS */
+
+let runningApps=[]
+
+function toggleApp(id){
+
+let app=document.getElementById(id)
+
+if(app.style.display==="flex"){
+
+app.style.display="none"
+
+runningApps=runningApps.filter(a=>a!==id)
+
+}else{
+
+app.style.display="flex"
+
+runningApps.push(id)
+
+}
+
+updateTasks()
+
+}
+
+/* GERENCIADOR DE TAREFAS */
+
+function updateTasks(){
+
+let el=document.getElementById("taskList")
+
+if(!el) return
+
+el.innerHTML=""
+
+runningApps.forEach(a=>{
+
+let d=document.createElement("div")
+
+d.innerText=a
+
+el.appendChild(d)
+
+})
+
+}
+
+/* ARQUIVOS */
+
+let files=JSON.parse(localStorage.getItem("files"))||[]
+
+function createFile(){
+
+let n=document.getElementById("filename").value
+
+files.push(n)
+
+localStorage.setItem("files",JSON.stringify(files))
+
+renderFiles()
+
+}
+
+function renderFiles(){
+
+let el=document.getElementById("fileList")
+
+el.innerHTML=""
+
+files.forEach(f=>{
+
+let d=document.createElement("div")
+
+d.innerText="📄 "+f
+
+el.appendChild(d)
+
+})
+
+}
+
+renderFiles()
+
+/* NAVEGADOR */
+
+function openSite(){
+
+let url=document.getElementById("url").value
+
+document.getElementById("frame").src="https://"+url
+
+}
+
+/* TERMINAL */
+
+function runCmd(){
+
+let cmd=document.getElementById("cmd").value
+
+let out=document.getElementById("terminalOutput")
+
+out.innerHTML+="<div>> "+cmd+"</div>"
+
+if(cmd==="help") out.innerHTML+="<div>comandos: help date</div>"
+
+if(cmd==="date") out.innerHTML+="<div>"+new Date()+"</div>"
+
+}
+
+/* IA */
+
+function askAI(){
+
+let q=document.getElementById("aiInput").value
+
+document.getElementById("aiOutput").innerText="IA: "+q
+
+}
+
+/* JOGO */
+
+function startGame(){
+
+let c=document.getElementById("game")
+
+let ctx=c.getContext("2d")
+
+let x=0
+
+setInterval(()=>{
+
+ctx.clearRect(0,0,600,300)
+
+ctx.fillStyle="cyan"
+
+ctx.fillRect(x,100,50,50)
+
+x+=5
+
+},40)
+
+}
+
+/* INSTALAR APP */
+
+function installApp(){
+
+let url=prompt("URL do app JS")
+
+if(url){
+
+let s=document.createElement("script")
+
+s.src=url
+
+document.body.appendChild(s)
+
+}
+
+}
+
+/* RELÓGIO */
+
+function clock(){
+
+document.getElementById("clock").innerText=new Date().toLocaleTimeString()
+
+}
+
+setInterval(clock,1000)
+
+clock()
+
+</script>
+
+</body>
+</html>
+>
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Acode Control Center</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#020617;
+color:white;
+padding:20px;
+}
+
+/* MENU */
+
+#menu{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+background:#0f172a;
+color:white;
+}
+
+/* SEÇÕES */
+
+.section{
+display:none;
+background:#0f172a;
+padding:15px;
+border-radius:10px;
+}
+
+.section.active{
+display:block;
+}
+
+/* APP LIST */
+
+.app{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+background:#020617;
+padding:8px;
+border-radius:6px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Acode Control Center</h1>
+
+<div id="menu">
+
+<button onclick="openTab('store')">Loja</button>
+<button onclick="openTab('settings')">Configurações</button>
+<button onclick="openTab('system')">Sistema</button>
+<button onclick="openTab('backup')">Backup</button>
+
+</div>
+
+<!-- LOJA -->
+
+<div id="store" class="section active">
+
+<h2>Loja de Apps</h2>
+
+<div class="app">
+
+<span>Calculadora</span>
+
+<button onclick="install('calc')">Instalar</button>
+
+</div>
+
+<div class="app">
+
+<span>Editor de Texto</span>
+
+<button onclick="install('editor')">Instalar</button>
+
+</div>
+
+<div class="app">
+
+<span>Relógio Avançado</span>
+
+<button onclick="install('clock')">Instalar</button>
+
+</div>
+
+</div>
+
+<!-- CONFIGURAÇÕES -->
+
+<div id="settings" class="section">
+
+<h2>Configurações</h2>
+
+<button onclick="themeDark()">Tema Escuro</button>
+<button onclick="themeLight()">Tema Claro</button>
+
+<br><br>
+
+<button onclick="clearFiles()">Apagar Arquivos</button>
+
+</div>
+
+<!-- SISTEMA -->
+
+<div id="system" class="section">
+
+<h2>Monitor do Sistema</h2>
+
+<div id="systemInfo"></div>
+
+</div>
+
+<!-- BACKUP -->
+
+<div id="backup" class="section">
+
+<h2>Backup</h2>
+
+<button onclick="exportFiles()">Exportar arquivos</button>
+<button onclick="importFiles()">Importar arquivos</button>
+
+</div>
+
+<script>
+
+/* TABS */
+
+function openTab(id){
+
+document.querySelectorAll(".section").forEach(s=>{
+
+s.classList.remove("active")
+
+})
+
+document.getElementById(id).classList.add("active")
+
+}
+
+/* LOJA */
+
+function install(app){
+
+alert("App "+app+" instalado")
+
+}
+
+/* TEMAS */
+
+function themeDark(){
+
+document.body.style.background="#020617"
+
+}
+
+function themeLight(){
+
+document.body.style.background="#e5e7eb"
+document.body.style.color="black"
+
+}
+
+/* SISTEMA */
+
+function updateSystem(){
+
+let info=document.getElementById("systemInfo")
+
+info.innerHTML=""
+
+info.innerHTML+="Hora: "+new Date()+"<br>"
+
+info.innerHTML+="Memória usada pelo navegador: desconhecida<br>"
+
+info.innerHTML+="Sistema: Acode OS"
+
+}
+
+setInterval(updateSystem,1000)
+
+/* BACKUP */
+
+function exportFiles(){
+
+let files=localStorage.getItem("files")
+
+let blob=new Blob([files])
+
+let a=document.createElement("a")
+
+a.href=URL.createObjectURL(blob)
+
+a.download="acode_backup.json"
+
+a.click()
+
+}
+
+function importFiles(){
+
+let input=document.createElement("input")
+
+input.type="file"
+
+input.onchange=e=>{
+
+let file=e.target.files[0]
+
+let reader=new FileReader()
+
+reader.onload=()=>{
+
+localStorage.setItem("files",reader.result)
+
+alert("Backup restaurado")
+
+}
+
+reader.readAsText(file)
+
+}
+
+input.click()
+
+}
+
+/* LIMPAR ARQUIVOS */
+
+function clearFiles(){
+
+localStorage.removeItem("files")
+
+alert("Arquivos apagados")
+
+}
+
+</script>
+
+</body>
+</html>
